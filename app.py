@@ -34,7 +34,7 @@ CORE OPERATIONAL PRINCIPLES:
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 @app.get("/health")
 def health_check():
@@ -71,7 +71,7 @@ async def analyze_crop(
             if pil_image.mode != "RGB":
                 pil_image = pil_image.convert("RGB")
             contents.append(pil_image)
-        except Exception as e:
+        except Exception:
             raise HTTPException(status_code=400, detail="Invalid image file")
 
     user_text = query.strip() if query else ""
@@ -96,4 +96,3 @@ Target Response Language: {target_language}
         return JSONResponse(content={"status": "success", "response_text": response.text})
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": f"जांच विफल रही: {str(e)}"})
-
